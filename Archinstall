@@ -174,7 +174,7 @@ sudo pacman -S xorg xorg-xinit
 	#安裝登入管理器
 sudo pacman -S lightdm lightdm-gtk-greeter
 
-	#啟用服務roo
+	#啟用服務
 sudo systemctl enable lightdm
 
 
@@ -214,10 +214,6 @@ rofi	類似demenu 開啟app
 	#安裝chromium firefox
 sudo pacman -S chromium firefox
 
-
-
-	#安裝Volume
-sudo pacman -S pulseaudio alsa-utils
 
 
 
