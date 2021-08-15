@@ -1,0 +1,274 @@
+1.磁碟分割
+
+＃查詢磁碟區
+fdisk -l
+
+＃開始進行分割
+cfdisk /dev/sda
+
+Device		Mount	size	Type
+/dev/sda1 	/boot	512MB	EFI System
+/dev/sda2	Swap		Linux Swap
+/dev/sda3			Linux Filesystem
+
+#格式化磁碟區
+
+mkfs -t vfat /dev/sda1
+mkswap /dev/sda2
+mkfs -t ext4 /dev/sda3
+
+
+
+2.掛載磁碟
+
+mount /dev/sda3 /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+
+
+3.開始安裝
+pacstrap /mnt base linux linux-firmware
+
+
+
+
+4.系統配置
+
+	#Fstab
+genfstab -U /mnt >> /mnt/etc/fstab
+
+	#Chroot
+arch-chroot /mnt
+
+	#設定時區
+ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime
+timedatectl set-timezone "Asia/Taipei"
+
+	#執行hwclock 生成 /etc/adjtime
+hwclock --systohc
+
+
+	#安裝vim
+pacman -S vim
+
+
+	#在地化設定
+
+	#取消註釋 en_US.UTF-8 UTF-8 
+vim /etc/locale.gen 
+
+	#執行
+locale-gen
+
+
+
+
+	#創建locale.conf文件 設定LANG變數
+
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+export LANG=en_US.UTF-8
+
+or
+
+vim /etc/locale.conf
+LANG=en_US.UTF-8
+
+
+	#設定電腦名稱
+echo "電腦名稱" > /etc/hostname
+
+
+	＃添加至hosts
+vim /etc/hosts
+
+127.0.0.1 (Tab空格) localhost
+::1 (Tab空格) localhost
+127.0.1.1 (Tab空格) 電腦名稱.localdomain (Tab空格) 電腦名稱
+
+
+
+	#安裝DHCP 網路設定 不然會沒網路
+pacman -S dhcpcd
+systemctl enable dhcpcd
+
+
+
+	#root 密碼設置
+passwd
+
+	#安裝sudo 
+pacman -S sudo
+
+	#創建使用者
+useradd -m -g users -G wheel -s /bin/bash 使用者名稱
+
+passwd 使用者名稱
+
+
+	#增新sudo 使用者
+visudo
+
+使用者名稱 ALL=(ALL) ALL
+
+
+
+	#安裝啟動程式
+pacman -Sy grub efibootmgr
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+
+
+
+	#安裝Processor microcode
+#Intel
+pacman -S intel-ucode
+
+#AMD
+pacman -S amd-ucode
+
+grub-mkconfig -o /boot/grub/grub.cfg
+
+
+
+	#重新啟動
+exit 
+
+umount -R /mnt
+
+reboot
+
+
+
+	#安裝中文字
+pacman -S wqy-bitmapfont wqy-zenhei ttf-arphic-ukai ttf-arphic-uming opendesktop-fonts
+
+	
+	#安裝多國語言環境
+pacman -S gnu-free-fonts ttf-arphic-uming ttf-baekmuk
+
+
+
+	#安裝emoji
+
+noto-fonts-emoji
+ttf-joypixels
+
+
+
+5.使用者安裝
+
+
+	#安裝顯示卡驅動
+	#查詢顯示卡
+lspci |grep -e Vga -e 3D
+
+
+pacman -S nvidia nvidia-utils
+
+
+	#安裝X window圖形界面 xorg
+sudo pacman -S xorg xorg-xinit 
+
+
+	#安裝登入管理器
+sudo pacman -S lightdm lightdm-gtk-greeter
+
+	#啟用服務roo
+sudo systemctl enable lightdm
+
+
+	#安裝桌面 這裡用i3 安裝1 3 4 5
+sudo pacman -S i3  
+
+sudo cp /etc/X11/xinit/xinitrc ~/.xinitrc
+
+vim ~/.xinitrc
+
+# 註釋掉
+# twm &
+# xclock -geometry 50x50-1+1 &
+# xterm -geometry 80x50+494+51 &
+# xterm -geometry 80x20+494-0 &
+# exec xterm -geometry 80x66+0+0 -name login
+
+exec i3   <==添加這行
+
+
+
+	#安裝terminal demenu ttf-dejavu feh(桌布用) compton
+sudo pacman -S dmenu ttf-dejavu terminator feh compton
+
+	
+
+	＃i3 常用搭配
+
+scrot	截圖
+feh	桌布
+alsa-utils	聲音
+rofi	類似demenu 開啟app
+
+
+
+
+	#安裝chromium firefox
+sudo pacman -S chromium firefox
+
+
+
+	#安裝Volume
+sudo pacman -S pulseaudio alsa-utils
+
+
+
+	#安裝yay
+sudo pacman -Syyu
+sudo pacman -S git base-devel
+cd /opt
+sudo git clone https://aur.archlinux.org/yay.git
+sudo chown -R '使用者名稱':users ./yay
+cd yay
+makepkg -si
+
+	#時鐘設定
+sudo pacman -S ntp
+systemctl enable ntpd.service
+systemctl start ntpd.service
+
+
+
+一些常用安裝
+
+virtualbox
+python
+pycharm-community-edition
+conky
+rsync
+libreoffice
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
