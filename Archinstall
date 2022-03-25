@@ -209,6 +209,10 @@ alsa-utils	聲音
 rofi	類似demenu 開啟app
 
 
+	# rofi 設置
+$ vim ~/.config/i3/config
+加入
+bindsym $mod+d exec --no-startup-id rofi -show drun
 
 
 	#安裝chromium firefox
