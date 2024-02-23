@@ -76,6 +76,9 @@ LANG=en_US.UTF-8
 
 	#設定電腦名稱
 echo "電腦名稱" > /etc/hostname
+	
+	#查詢電腦名稱
+cat /etc/hostname
 
 
 	＃添加至hosts
@@ -196,8 +199,8 @@ exec i3   <==添加這行
 
 
 
-	#安裝terminal demenu ttf-dejavu feh(桌布用) compton
-sudo pacman -S dmenu ttf-dejavu terminator feh compton
+	#安裝terminal ttf-dejavu feh(桌布用) 
+sudo pacman -S ttf-dejavu terminator feh 
 
 	
 
@@ -205,14 +208,21 @@ sudo pacman -S dmenu ttf-dejavu terminator feh compton
 
 scrot	截圖
 feh	桌布
-alsa-utils	聲音
+PulseAudio 音訊系統
+pavucontrol 音量控制鍵
 rofi	類似demenu 開啟app
-
+Neofetch
 
 	# rofi 設置
 $ vim ~/.config/i3/config
 加入
 bindsym $mod+d exec --no-startup-id rofi -show drun
+
+	#安裝合成器picom啟用透明特效
+sudo pacman -S picom
+cp /etc/xdg/picom.conf ~/.config/picom.conf
+exec_always --no-startup-id picom -b --config /home/$USER/.config/picom.conf
+
 
 
 	#安裝chromium firefox
@@ -239,12 +249,13 @@ systemctl start ntpd.service
 
 一些常用安裝
 
+
+
 virtualbox
+virtualbox-guest-iso  (客機包)
+virtualbox-guest-utils(客機包)
 python
 pycharm-community-edition
 conky
 rsync
 libreoffice
-
-
-
