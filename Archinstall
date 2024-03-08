@@ -230,7 +230,7 @@ sudo pacman -S chromium firefox
 
 
 	#安裝screenfetch
-sudo vim vim ~/.bashrc
+sudo vim ~/.bashrc
 最末端輸入 screenfetch
 
 
