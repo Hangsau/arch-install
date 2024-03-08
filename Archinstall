@@ -229,6 +229,10 @@ exec_always --no-startup-id picom -b --config /home/$USER/.config/picom.conf
 sudo pacman -S chromium firefox
 
 
+	#安裝screenfetch
+sudo vim vim ~/.bashrc
+最末端輸入 screenfetch
+
 
 
 	#安裝yay
