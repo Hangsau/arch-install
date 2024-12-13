@@ -198,6 +198,7 @@ vim ~/.xinitrc
 exec i3   <==添加這行
 
 
+reboot
 
 	#安裝terminal ttf-dejavu feh(桌布用) 
 sudo pacman -S ttf-dejavu terminator feh 
